@@ -120,23 +120,15 @@ def gather(p: Path, suffix: str | None = None) -> dict[Path, Path]:
     return relative2absolute
 
 
-def delete_diff_from_target(
+def diff_from_target(
     relative2absolute_source: dict[Path, Path],
     relative2absolute_target: dict[Path, Path],
-    dry_run: bool,
-) -> None:
+) -> list[Path]:
     relative_source = relative2absolute_source.keys()
     relative_target = relative2absolute_target.keys()
 
     diff_relative = relative_target - relative_source
-
-    if diff_relative:
-        print("Deleting files...")
-    for relative_path in diff_relative:
-        toDelete = relative2absolute_target[relative_path]
-        print(f"Deleting {toDelete}...")
-        if not dry_run:
-            os.remove(toDelete)
+    return [relative2absolute_target[relative] for relative in diff_relative]
 
 
 if __name__ == "__main__":
@@ -146,4 +138,9 @@ if __name__ == "__main__":
     relative2absolute_s = gather(args.source, args.source_suffix)
     relative2absolute_t = gather(args.target, args.target_suffix)
 
-    delete_diff_from_target(relative2absolute_s, relative2absolute_t, args.dry_run)
+    toDelete = diff_from_target(relative2absolute_s, relative2absolute_t)
+    for file in toDelete:
+        print(f"Deleting {file}...")
+        if not args.dry_run:
+            os.remove(file)
+
