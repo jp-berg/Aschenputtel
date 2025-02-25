@@ -1,0 +1,38 @@
+[project]
+name = "aschenputtel"
+version = "0.1.0"
+authors = [
+  { name="Jan Philipp Berg", email="git.7ksst@aleeas.com" },
+]
+description = "Deletes files from one directory that are missing in another"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "GNU General Public License v3 or later (GPLv3+)"}
+keywords = ["file", "file management"]
+dependencies = []
+
+[project.scripts]
+aschenputtel = "anschenputtel.py"
+
+[tool.mypy]
+strict = true
+python_executable = ".venv/bin/python"
+pretty = true
+warn_unused_configs = true
+warn_unused_ignores = true
+warn_unreachable = true
+files = ['aschenputtel.py']
+
+[tool.black]
+workers = 2
+preview = true
+
+[tool.isort]
+profile = "black"
+
+
+[tool.autoflake]
+recursive = true
+in-place = true
+remove-all-unused-imports = true
+remove-unused-variables = true
