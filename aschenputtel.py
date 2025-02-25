@@ -1,4 +1,5 @@
 import argparse
+import os
 from argparse import ArgumentError
 from pathlib import Path
 from typing import NamedTuple
@@ -8,7 +9,7 @@ parser = argparse.ArgumentParser(
     description="Moves .DNG-Files without matching .JPG files into a separate folder",
 )
 
-# TODO --dry-run --delete --verbose --quiet --version --create-with
+# TODO --delete --verbose --quiet --version --create-with --move-to --delete-empty-dirs
 source_action = parser.add_argument(
     "source", nargs=1, help="The directory containing the state to replicate"
 )
@@ -31,6 +32,12 @@ target_suffix_action = parser.add_argument(
     nargs=1,
     help="The file-suffix of the files representing the target",
 )
+dry_run_action = parser.add_argument(
+    "-d",
+    "--dry-run",
+    action="store_true",
+    help="Just show the files that would have been deleted without actually deleting them",
+)
 
 
 class AschenputtelArgs(NamedTuple):
@@ -38,6 +45,7 @@ class AschenputtelArgs(NamedTuple):
     target: Path
     source_suffix: str | None = None
     target_suffix: str | None = None
+    dry_run: bool = False
 
 
 def extract_args() -> AschenputtelArgs:
@@ -69,7 +77,9 @@ def extract_args() -> AschenputtelArgs:
     else:
         target_suffix = None
 
-    return AschenputtelArgs(source_dir, target_dir, source_suffix, target_suffix)
+    return AschenputtelArgs(
+        source_dir, target_dir, source_suffix, target_suffix, parsed_args.dry_run
+    )
 
 
 def validate_args(args: AschenputtelArgs) -> None:
@@ -121,3 +131,12 @@ if __name__ == "__main__":
     relative_target = relative2absolute_target.keys()
 
     diff_relative = relative_target - relative_source
+
+    print(f"{args.dry_run=}")
+    if diff_relative:
+        print("Deleting files...")
+    for relative_path in diff_relative:
+        toDelete = relative2absolute_target[relative_path]
+        print(f"Deleting {toDelete}...")
+        if not args.dry_run:
+            os.remove(toDelete)
