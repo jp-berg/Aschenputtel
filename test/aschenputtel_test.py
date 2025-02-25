@@ -1,4 +1,3 @@
-import os
 import tomllib
 import unittest
 from functools import cache
@@ -12,9 +11,11 @@ def get_tests_dir() -> Path:
     parent_dir = Path(__file__).parent
     return parent_dir / "testdirectory"
 
+
 @cache
 def get_in_same_dir() -> Path:
     return get_tests_dir() / "inSameDir"
+
 
 @cache
 def get_validation_info() -> dict:
@@ -23,11 +24,10 @@ def get_validation_info() -> dict:
         d = tomllib.load(vf)
         return d
 
+
 @cache
 def get_test_dirs() -> dict[str, Path]:
-    return  {f.name: f for f in get_in_same_dir().iterdir() if f.is_dir()}
-
-
+    return {f.name: f for f in get_in_same_dir().iterdir() if f.is_dir()}
 
 
 class TestInSameDir(unittest.TestCase):
@@ -38,9 +38,12 @@ class TestInSameDir(unittest.TestCase):
 
         if not_in_toml := test_dirs.keys() - tests.keys():
             self.fail(
-                f"The following directories are not described in validation.toml: {[test_dirs[name] for name in not_in_toml]}")
+                f"The following directories are not described in validation.toml: {[test_dirs[name] for name in not_in_toml]}"
+            )
         if not_a_dir := tests.keys() - test_dirs.keys():
-            self.fail(f"The following validation.toml-entries have no directory: {not_a_dir}")
+            self.fail(
+                f"The following validation.toml-entries have no directory: {not_a_dir}"
+            )
 
     def test_gather(self) -> None:
         test_dirs = get_test_dirs()
@@ -52,20 +55,24 @@ class TestInSameDir(unittest.TestCase):
             self._test_gather_for(test_name, values, test_dir, ".txt")
             self._test_gather_for(test_name, values, test_dir, ".md")
 
-
-    def _test_gather_for(self, test_name: str, values: dict, test_dir: Path, suffix: str) -> None:
-        txt_validation = {filename.replace(suffix, "") for filename in values["all"] if filename.endswith(suffix)}
+    def _test_gather_for(
+        self, test_name: str, values: dict, test_dir: Path, suffix: str
+    ) -> None:
+        txt_validation = {
+            filename.replace(suffix, "")
+            for filename in values["all"]
+            if filename.endswith(suffix)
+        }
         txt_test = {str(filename) for filename in gather(test_dir, suffix).keys()}
 
         if not_in_validation := txt_test - txt_validation:
             self.fail(
-                f"{test_name}: The following {suffix}-files were discovered by aschenputtel.gather() but are not listed in the validation file: {[f + suffix for f in not_in_validation]}")
+                f"{test_name}: The following {suffix}-files were discovered by aschenputtel.gather() but are not listed in the validation file: {[f + suffix for f in not_in_validation]}"
+            )
         if not_in_test := txt_validation - txt_test:
             self.fail(
-                f"{test_name}: The following {suffix}-files were not discovered by aschenputtel.gather() but are listed in the validation file: {[f + suffix for f in not_in_test]}")
-
-
-
+                f"{test_name}: The following {suffix}-files were not discovered by aschenputtel.gather() but are listed in the validation file: {[f + suffix for f in not_in_test]}"
+            )
 
         # for test_dir in tests:
         #     test_dir_items = [f for f in test_dir.iterdir()]
@@ -91,6 +98,3 @@ class TestInSameDir(unittest.TestCase):
         #
         #     self.assertEqual(to_delete_file.name,"toDelete.txt")
         #     to_delete = [item for item in to_delete_file.read_text().split(os.linesep) if item.strip()]
-
-
-
