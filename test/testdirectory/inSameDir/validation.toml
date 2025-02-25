@@ -1,0 +1,15 @@
+[Test1]
+to_delete = ["file2.md"]
+all = ["file1.md", "file1.txt", "file2.md"]
+
+[Test2]
+to_delete = ["file2.md"]
+all = ["file1.txt", "file2.md", "folder1/file2.txt"]
+
+[Test3]
+to_delete = ["folder1/file1.md"]
+all = ["folder1/file1.md", "folder1/file2.md", "folder1/file2.txt", "file1.txt"]
+
+[Test4]
+to_delete = ["file3.md", "file6.md", "file8.md"]
+all = ["file1.md", "file10.md", "file2.md", "file3.md", "file4.txt", "file5.txt", "file7.md", "file8.md", "file9.txt", "file1.txt", "file10.txt", "file2.txt", "file4.md", "file5.md", "file6.md", "file7.txt", "file9.md"]
