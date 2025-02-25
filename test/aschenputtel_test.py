@@ -18,7 +18,7 @@ def get_in_same_dir() -> Path:
 
 
 @cache
-def get_validation_info() -> dict:
+def get_validation_info() -> dict[str, dict[str, list[str]]]:
     validation_file = get_in_same_dir() / "validation.toml"
     with validation_file.open("rb") as vf:
         d = tomllib.load(vf)
@@ -56,7 +56,7 @@ class TestInSameDir(unittest.TestCase):
             self._test_gather_for(test_name, values, test_dir, ".md")
 
     def _test_gather_for(
-        self, test_name: str, values: dict, test_dir: Path, suffix: str
+        self, test_name: str, values: dict[str, list[str]], test_dir: Path, suffix: str
     ) -> None:
         txt_validation = {
             filename.replace(suffix, "")
