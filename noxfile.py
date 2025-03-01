@@ -4,7 +4,7 @@ import nox
 
 nox.options.default_venv_backend = "uv"
 
-PYTHON_VERSION_LIST: Final[list[str]] = ["3.12", "3.13"]
+PYTHON_VERSION_LIST: Final[list[str]] = ["3.10", "3.11", "3.12", "3.13"]
 
 
 @nox.session
@@ -27,4 +27,5 @@ def check(session: nox.Session) -> None:
     session.install("mypy")
     session.run("mypy")
 
+    session.install("tomli") # stupid hack to make the tests pass
     session.run("python3", "-m", "unittest", "test/aschenputtel_test.py")

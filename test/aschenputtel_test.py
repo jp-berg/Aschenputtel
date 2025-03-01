@@ -1,7 +1,8 @@
-import tomllib
 import unittest
 from functools import cache
 from pathlib import Path
+
+import tomli  # Not tomllib so Python 3.10 can still be used
 
 from aschenputtel import gather, get_to_delete
 
@@ -21,7 +22,7 @@ def get_in_same_dir() -> Path:
 def get_validation_info() -> dict[str, dict[str, list[str]]]:
     validation_file = get_in_same_dir() / "validation.toml"
     with validation_file.open("rb") as vf:
-        d = tomllib.load(vf)
+        d = tomli.load(vf)
         return d
 
 
