@@ -131,16 +131,23 @@ def diff_from_target(
     return [relative2absolute_target[relative] for relative in diff_relative]
 
 
+def get_to_delete(
+    source: Path, source_suffix: str | None, target: Path, target_suffix: str | None
+) -> list[Path]:
+    relative2absolute_s = gather(source, source_suffix)
+    relative2absolute_t = gather(target, target_suffix)
+
+    return diff_from_target(relative2absolute_s, relative2absolute_t)
+
+
 if __name__ == "__main__":
     args = extract_args()
     validate_args(args)
 
-    relative2absolute_s = gather(args.source, args.source_suffix)
-    relative2absolute_t = gather(args.target, args.target_suffix)
-
-    toDelete = diff_from_target(relative2absolute_s, relative2absolute_t)
-    for file in toDelete:
+    to_delete = get_to_delete(
+        args.source, args.source_suffix, args.target, args.target_suffix
+    )
+    for file in to_delete:
         print(f"Deleting {file}...")
         if not args.dry_run:
             os.remove(file)
-
