@@ -9,7 +9,9 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "GNU General Public License v3 or later (GPLv3+)"}
 keywords = ["file", "file management"]
-dependencies = []
+dependencies = [
+    "nox>=2025.2.9",
+]
 
 [project.scripts]
 aschenputtel = "anschenputtel.py"
