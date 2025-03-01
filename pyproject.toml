@@ -23,7 +23,7 @@ pretty = true
 warn_unused_configs = true
 warn_unused_ignores = true
 warn_unreachable = true
-files = ['aschenputtel.py']
+files = ['aschenputtel.py', 'noxfile.py', 'test/aschenputtel_test.py']
 
 [tool.black]
 workers = 2
