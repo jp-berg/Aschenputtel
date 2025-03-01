@@ -58,18 +58,18 @@ class TestInSameDir(unittest.TestCase):
     def _test_gather_for(
         self, test_name: str, values: dict[str, list[str]], test_dir: Path, suffix: str
     ) -> None:
-        txt_validation = {
+        validation_files = {
             filename.replace(suffix, "")
             for filename in values["all"]
             if filename.endswith(suffix)
         }
-        txt_test = {str(filename) for filename in gather(test_dir, suffix).keys()}
+        found_files = {str(filename) for filename in gather(test_dir, suffix).keys()}
 
-        if not_in_validation := txt_test - txt_validation:
+        if not_in_validation := found_files - validation_files:
             self.fail(
                 f"{test_name}: The following {suffix}-files were discovered by aschenputtel.gather() but are not listed in the validation file: {[f + suffix for f in not_in_validation]}"
             )
-        if not_in_test := txt_validation - txt_test:
+        if not_in_test := validation_files - found_files:
             self.fail(
                 f"{test_name}: The following {suffix}-files were not discovered by aschenputtel.gather() but are listed in the validation file: {[f + suffix for f in not_in_test]}"
             )
