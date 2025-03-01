@@ -3,7 +3,7 @@ import unittest
 from functools import cache
 from pathlib import Path
 
-from aschenputtel import gather
+from aschenputtel import gather, get_to_delete
 
 
 @cache
@@ -74,27 +74,26 @@ class TestInSameDir(unittest.TestCase):
                 f"{test_name}: The following {suffix}-files were not discovered by aschenputtel.gather() but are listed in the validation file: {[f + suffix for f in not_in_test]}"
             )
 
-        # for test_dir in tests:
-        #     test_dir_items = [f for f in test_dir.iterdir()]
-        #     self.assertEqual(len(test_dir_items), 2)
-        #
-        #     if test_dir_items[0].is_dir():
-        #         setup_dir = test_dir_items[0]
-        #
-        #         to_delete_file = test_dir_items[1]
-        #         self.assertTrue(to_delete_file.is_file())
-        #
-        #     elif test_dir_items[0].is_file():
-        #         to_delete_file = test_dir_items[0]
-        #
-        #         setup_dir = test_dir_items[1]
-        #         self.assertTrue(setup_dir.is_dir())
-        #     else:
-        #         self.fail("Not possible")
-        #
-        #
-        #     self.assertEqual(setup_dir.name, "dir")
-        #
-        #
-        #     self.assertEqual(to_delete_file.name,"toDelete.txt")
-        #     to_delete = [item for item in to_delete_file.read_text().split(os.linesep) if item.strip()]
+    def test_get_to_delete(self) -> None:
+        test_dirs = get_test_dirs()
+        tests = get_validation_info()
+
+        for test_name, values in tests.items():
+            test_dir = test_dirs[test_name]
+            to_delete_list = get_to_delete(test_dir, ".txt", test_dir, ".md")
+
+            to_delete_set = set(to_delete_list)
+            self.assertEqual(len(to_delete_list), len(to_delete_set))
+
+            validation_list = [test_dir / value for value in values["to_delete"]]
+            validation_set = set(validation_list)
+            self.assertEqual(len(validation_list), len(validation_set))
+
+            if not_in_validation := to_delete_set - validation_set:
+                self.fail(
+                    f"{test_name}: The following files were erroneously marked for deletion: {not_in_validation}"
+                )
+            if not_in_to_delete := validation_set - to_delete_set:
+                self.fail(
+                    f"{test_name}: The following files should be deleted but were not marked as such: {not_in_to_delete}"
+                )
