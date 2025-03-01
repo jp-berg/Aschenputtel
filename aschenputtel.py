@@ -2,7 +2,7 @@ import argparse
 import os
 from argparse import ArgumentError
 from pathlib import Path
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 parser = argparse.ArgumentParser(
     prog="Aschenputtel",
@@ -43,8 +43,8 @@ dry_run_action = parser.add_argument(
 class AschenputtelArgs(NamedTuple):
     source: Path
     target: Path
-    source_suffix: str | None = None
-    target_suffix: str | None = None
+    source_suffix: Optional[str] = None
+    target_suffix: Optional[str] = None
     dry_run: bool = False
 
 
@@ -100,7 +100,7 @@ def validate_args(args: AschenputtelArgs) -> None:
         )
 
 
-def gather(p: Path, suffix: str | None = None) -> dict[Path, Path]:
+def gather(p: Path, suffix: Optional[str] = None) -> dict[Path, Path]:
     all_files = [
         (path, dirnames, filenames) for path, dirnames, filenames in os.walk(p)
     ]
@@ -134,7 +134,10 @@ def diff_from_target(
 
 
 def get_to_delete(
-    source: Path, source_suffix: str | None, target: Path, target_suffix: str | None
+    source: Path,
+    source_suffix: Optional[str],
+    target: Path,
+    target_suffix: Optional[str],
 ) -> list[Path]:
     relative2absolute_s = gather(source, source_suffix)
     relative2absolute_t = gather(target, target_suffix)

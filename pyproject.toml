@@ -6,7 +6,7 @@ authors = [
 ]
 description = "Deletes files from one directory that are missing in another"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 license = {text = "GNU General Public License v3 or later (GPLv3+)"}
 keywords = ["file", "file management"]
 dependencies = [
