@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-aschenputtel = "anschenputtel.py"
+aschenputtel = "aschenputtel.py"
 
 [tool.mypy]
 strict = true
