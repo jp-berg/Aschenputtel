@@ -101,7 +101,9 @@ def validate_args(args: AschenputtelArgs) -> None:
 
 
 def gather(p: Path, suffix: str | None = None) -> dict[Path, Path]:
-    all_files = [(path, dirnames, filenames) for path, dirnames, filenames in p.walk()]
+    all_files = [
+        (path, dirnames, filenames) for path, dirnames, filenames in os.walk(p)
+    ]
     relative2absolute = {}
     current_absolute: Path
     current_relative: Path
