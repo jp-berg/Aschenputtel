@@ -2,6 +2,7 @@ import unittest
 from abc import ABC, abstractmethod
 from functools import cache, cached_property
 from pathlib import Path
+from typing import Any
 
 import tomli  # Not tomllib so Python 3.10 can still be used
 
@@ -24,7 +25,7 @@ class AschenputtelTest(ABC, unittest.TestCase):
         return get_tests_dir() / self.get_dir_name()
 
     @cached_property
-    def validation_info(self) -> dict[str, dict[str, list[str]]]:
+    def validation_info(self) -> dict[str, Any]:
         validation_file = self.test_dir / "validation.toml"
         with validation_file.open("rb") as vf:
             d = tomli.load(vf)
