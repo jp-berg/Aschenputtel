@@ -1,0 +1,9 @@
+[Test1.md2txt]
+to_delete= ["file3.txt"]
+all_destination = ["file1.txt", "file3.txt"]
+all_origin = ["file1.md", "file2.md"]
+
+[Test1.txt2md]
+to_delete = ["file2.md"]
+all_destination = ["file1.md", "file2.md"]
+all_origin = ["file1.txt"]
