@@ -35,12 +35,6 @@ class AschenputtelTest(ABC, unittest.TestCase):
     def test_dirs(self) -> dict[str, Path]:
         return {f.name: f for f in self.test_dir.iterdir() if f.is_dir()}
 
-
-class TestInSameDir(AschenputtelTest):
-
-    def get_dir_name(self) -> str:
-        return "inSameDir"
-
     def test_testdata(self) -> None:
 
         if not_in_toml := self.test_dirs.keys() - self.validation_info.keys():
@@ -51,6 +45,12 @@ class TestInSameDir(AschenputtelTest):
             self.fail(
                 f"The following validation.toml-entries have no directory: {not_a_dir}"
             )
+
+
+class TestInSameDir(AschenputtelTest):
+
+    def get_dir_name(self) -> str:
+        return "inSameDir"
 
     def test_gather(self) -> None:
 
