@@ -46,26 +46,12 @@ class AschenputtelTest(ABC, unittest.TestCase):
                 f"The following validation.toml-entries have no directory in  {self.test_dir}: {not_a_dir}"
             )
 
-
-class TestInSameDir(AschenputtelTest):
-
-    def get_dir_name(self) -> str:
-        return "inSameDir"
-
-    def test_gather(self) -> None:
-
-        test_dir: Path
-        for test_name, values in self.validation_info.items():
-            test_dir = self.test_dirs[test_name]
-            self._test_gather_for(test_name, values, test_dir, ".txt")
-            self._test_gather_for(test_name, values, test_dir, ".md")
-
     def _test_gather_for(
-        self, test_name: str, values: dict[str, list[str]], test_dir: Path, suffix: str
+        self, test_name: str, values: list[str], test_dir: Path, suffix: str
     ) -> None:
         validation_files = {
             filename.replace(suffix, "")
-            for filename in values["all"]
+            for filename in values
             if filename.endswith(suffix)
         }
         found_files = {str(filename) for filename in gather(test_dir, suffix).keys()}
@@ -78,6 +64,20 @@ class TestInSameDir(AschenputtelTest):
             self.fail(
                 f"{test_name}: The following {suffix}-files were not discovered by aschenputtel.gather() but are listed in the validation file: {[f + suffix for f in not_in_test]}"
             )
+
+
+class TestInSameDir(AschenputtelTest):
+
+    def get_dir_name(self) -> str:
+        return "inSameDir"
+
+    def test_gather(self) -> None:
+
+        test_dir: Path
+        for test_name, values in self.validation_info.items():
+            test_dir = self.test_dirs[test_name]
+            self._test_gather_for(test_name, values["all"], test_dir, ".txt")
+            self._test_gather_for(test_name, values["all"], test_dir, ".md")
 
     def test_get_to_delete(self) -> None:
 
