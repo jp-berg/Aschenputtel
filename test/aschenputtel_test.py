@@ -100,3 +100,6 @@ class TestInSameDir(AschenputtelTest):
                 self.fail(
                     f"{test_name}: The following files should be deleted but were not marked as such: {not_in_to_delete}"
                 )
+
+
+del AschenputtelTest
