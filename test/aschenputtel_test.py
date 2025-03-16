@@ -43,7 +43,7 @@ class AschenputtelTest(ABC, unittest.TestCase):
             )
         if not_a_dir := self.validation_info.keys() - self.test_dirs.keys():
             self.fail(
-                f"The following validation.toml-entries have no directory: {not_a_dir}"
+                f"The following validation.toml-entries have no directory in  {self.test_dir}: {not_a_dir}"
             )
 
 
