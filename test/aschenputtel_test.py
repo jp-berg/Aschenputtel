@@ -1,5 +1,5 @@
 import unittest
-from functools import cache
+from functools import cache, cached_property
 from pathlib import Path
 
 import tomli  # Not tomllib so Python 3.10 can still be used
@@ -13,46 +13,39 @@ def get_tests_dir() -> Path:
     return parent_dir / "testdirectory"
 
 
-@cache
-def get_in_same_dir() -> Path:
-    return get_tests_dir() / "inSameDir"
-
-
-@cache
-def get_validation_info() -> dict[str, dict[str, list[str]]]:
-    validation_file = get_in_same_dir() / "validation.toml"
-    with validation_file.open("rb") as vf:
-        d = tomli.load(vf)
-        return d
-
-
-@cache
-def get_test_dirs() -> dict[str, Path]:
-    return {f.name: f for f in get_in_same_dir().iterdir() if f.is_dir()}
-
-
 class TestInSameDir(unittest.TestCase):
 
-    def test_testdata(self) -> None:
-        test_dirs = get_test_dirs()
-        tests = get_validation_info()
+    @cached_property
+    def test_dir(self) -> Path:
+        return get_tests_dir() / "inSameDir"
 
-        if not_in_toml := test_dirs.keys() - tests.keys():
+    @cached_property
+    def validation_info(self) -> dict[str, dict[str, list[str]]]:
+        validation_file = self.test_dir / "validation.toml"
+        with validation_file.open("rb") as vf:
+            d = tomli.load(vf)
+            return d
+
+    @cached_property
+    def test_dirs(self) -> dict[str, Path]:
+        return {f.name: f for f in self.test_dir.iterdir() if f.is_dir()}
+
+    def test_testdata(self) -> None:
+
+        if not_in_toml := self.test_dirs.keys() - self.validation_info.keys():
             self.fail(
-                f"The following directories are not described in validation.toml: {[test_dirs[name] for name in not_in_toml]}"
+                f"The following directories are not described in validation.toml: {[self.test_dirs[name] for name in not_in_toml]}"
             )
-        if not_a_dir := tests.keys() - test_dirs.keys():
+        if not_a_dir := self.validation_info.keys() - self.test_dirs.keys():
             self.fail(
                 f"The following validation.toml-entries have no directory: {not_a_dir}"
             )
 
     def test_gather(self) -> None:
-        test_dirs = get_test_dirs()
-        tests = get_validation_info()
 
         test_dir: Path
-        for test_name, values in tests.items():
-            test_dir = test_dirs[test_name]
+        for test_name, values in self.validation_info.items():
+            test_dir = self.test_dirs[test_name]
             self._test_gather_for(test_name, values, test_dir, ".txt")
             self._test_gather_for(test_name, values, test_dir, ".md")
 
@@ -76,11 +69,9 @@ class TestInSameDir(unittest.TestCase):
             )
 
     def test_get_to_delete(self) -> None:
-        test_dirs = get_test_dirs()
-        tests = get_validation_info()
 
-        for test_name, values in tests.items():
-            test_dir = test_dirs[test_name]
+        for test_name, values in self.validation_info.items():
+            test_dir = self.test_dirs[test_name]
             to_delete_list = get_to_delete(test_dir, ".txt", test_dir, ".md")
 
             to_delete_set = set(to_delete_list)
