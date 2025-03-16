@@ -1,4 +1,5 @@
 import unittest
+from abc import ABC, abstractmethod
 from functools import cache, cached_property
 from pathlib import Path
 
@@ -13,11 +14,14 @@ def get_tests_dir() -> Path:
     return parent_dir / "testdirectory"
 
 
-class TestInSameDir(unittest.TestCase):
+class AschenputtelTest(ABC, unittest.TestCase):
+
+    @abstractmethod
+    def get_dir_name(self) -> str: ...
 
     @cached_property
     def test_dir(self) -> Path:
-        return get_tests_dir() / "inSameDir"
+        return get_tests_dir() / self.get_dir_name()
 
     @cached_property
     def validation_info(self) -> dict[str, dict[str, list[str]]]:
@@ -29,6 +33,12 @@ class TestInSameDir(unittest.TestCase):
     @cached_property
     def test_dirs(self) -> dict[str, Path]:
         return {f.name: f for f in self.test_dir.iterdir() if f.is_dir()}
+
+
+class TestInSameDir(AschenputtelTest):
+
+    def get_dir_name(self) -> str:
+        return "inSameDir"
 
     def test_testdata(self) -> None:
 
