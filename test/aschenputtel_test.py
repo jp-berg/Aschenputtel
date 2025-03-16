@@ -102,4 +102,35 @@ class TestInSameDir(AschenputtelTest):
                 )
 
 
+class TestInDifferentDir(AschenputtelTest):
+
+    def get_dir_name(self) -> str:
+        return "inDifferentDir"
+
+    @cached_property
+    def in_same_dir(self) -> TestInSameDir:
+        return TestInSameDir()
+
+    def test_testdata(self) -> None:
+        super().test_testdata()
+
+        if not_a_dir := self.validation_info.keys() - self.in_same_dir.test_dirs.keys():
+            self.fail(
+                f"The following validation.toml-entries have no directory in {self.in_same_dir.test_dir}: {not_a_dir}"
+            )
+
+    def test_gather_md2txt(self) -> None:
+        source_dir: Path
+        target_dir: Path
+        for test_name, values in self.validation_info.items():
+            source_dir = self.in_same_dir.test_dirs[test_name]
+            self._test_gather_for(
+                test_name, values["md2txt"]["all_origin"], source_dir, ".md"
+            )
+            target_dir = self.test_dirs[test_name]
+            self._test_gather_for(
+                test_name, values["md2txt"]["all_destination"], target_dir, ".txt"
+            )
+
+
 del AschenputtelTest
