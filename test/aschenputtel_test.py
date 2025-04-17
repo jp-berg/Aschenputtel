@@ -65,6 +65,24 @@ class AschenputtelTest(ABC, unittest.TestCase):
                 f"{test_name}: The following {suffix}-files were not discovered by aschenputtel.gather() but are listed in the validation file: {[f + suffix for f in not_in_test]}"
             )
 
+    def _validate_to_delete(
+        self, test_name: str, to_delete: list[Path], validation: list[Path]
+    ) -> None:
+        to_delete_set = set(to_delete)
+        self.assertEqual(len(to_delete), len(to_delete_set))
+
+        validation_set = set(validation)
+        self.assertEqual(len(validation), len(validation_set))
+
+        if not_in_validation := to_delete_set - validation_set:
+            self.fail(
+                f"{test_name}: The following files were erroneously marked for deletion: {not_in_validation}"
+            )
+        if not_in_to_delete := validation_set - to_delete_set:
+            self.fail(
+                f"{test_name}: The following files should be deleted but were not marked as such: {not_in_to_delete}"
+            )
+
 
 class TestInSameDir(AschenputtelTest):
 
@@ -83,23 +101,11 @@ class TestInSameDir(AschenputtelTest):
 
         for test_name, values in self.validation_info.items():
             test_dir = self.test_dirs[test_name]
+
             to_delete_list = get_to_delete(test_dir, ".txt", test_dir, ".md")
-
-            to_delete_set = set(to_delete_list)
-            self.assertEqual(len(to_delete_list), len(to_delete_set))
-
             validation_list = [test_dir / value for value in values["to_delete"]]
-            validation_set = set(validation_list)
-            self.assertEqual(len(validation_list), len(validation_set))
 
-            if not_in_validation := to_delete_set - validation_set:
-                self.fail(
-                    f"{test_name}: The following files were erroneously marked for deletion: {not_in_validation}"
-                )
-            if not_in_to_delete := validation_set - to_delete_set:
-                self.fail(
-                    f"{test_name}: The following files should be deleted but were not marked as such: {not_in_to_delete}"
-                )
+            self._validate_to_delete(test_name, to_delete_list, validation_list)
 
 
 class TestInDifferentDir(AschenputtelTest):
