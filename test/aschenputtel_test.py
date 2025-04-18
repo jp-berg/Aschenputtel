@@ -155,6 +155,20 @@ class TestInDifferentDir(AschenputtelTest):
                     test_name, values["txt2md"]["all_destination"], target_dir, ".md"
                 )
 
+    def test_get_to_delete_md2txt(self) -> None:
+        source_dir: Path
+        target_dir: Path
+        for test_name, values in self.validation_info.items():
+            with self.subTest(name=test_name):
+                source_dir = self.in_same_dir.test_dirs[test_name]
+                target_dir = self.test_dirs[test_name]
+                to_delete_list = get_to_delete(source_dir, ".md", target_dir, ".txt")
+                validation_list = [
+                    target_dir / value for value in values["md2txt"]["to_delete"]
+                ]
+
+                self._validate_to_delete(test_name, to_delete_list, validation_list)
+
 
 
 del AschenputtelTest
