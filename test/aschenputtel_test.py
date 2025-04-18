@@ -93,19 +93,21 @@ class TestInSameDir(AschenputtelTest):
 
         test_dir: Path
         for test_name, values in self.validation_info.items():
-            test_dir = self.test_dirs[test_name]
-            self._test_gather_for(test_name, values["all"], test_dir, ".txt")
-            self._test_gather_for(test_name, values["all"], test_dir, ".md")
+            with self.subTest(name=test_name):
+                test_dir = self.test_dirs[test_name]
+                self._test_gather_for(test_name, values["all"], test_dir, ".txt")
+                self._test_gather_for(test_name, values["all"], test_dir, ".md")
 
     def test_get_to_delete(self) -> None:
 
         for test_name, values in self.validation_info.items():
-            test_dir = self.test_dirs[test_name]
+            with self.subTest(name=test_name):
+                test_dir = self.test_dirs[test_name]
 
-            to_delete_list = get_to_delete(test_dir, ".txt", test_dir, ".md")
-            validation_list = [test_dir / value for value in values["to_delete"]]
+                to_delete_list = get_to_delete(test_dir, ".txt", test_dir, ".md")
+                validation_list = [test_dir / value for value in values["to_delete"]]
 
-            self._validate_to_delete(test_name, to_delete_list, validation_list)
+                self._validate_to_delete(test_name, to_delete_list, validation_list)
 
 
 class TestInDifferentDir(AschenputtelTest):
@@ -129,14 +131,16 @@ class TestInDifferentDir(AschenputtelTest):
         source_dir: Path
         target_dir: Path
         for test_name, values in self.validation_info.items():
-            source_dir = self.in_same_dir.test_dirs[test_name]
-            self._test_gather_for(
-                test_name, values["md2txt"]["all_origin"], source_dir, ".md"
-            )
-            target_dir = self.test_dirs[test_name]
-            self._test_gather_for(
-                test_name, values["md2txt"]["all_destination"], target_dir, ".txt"
-            )
+            with self.subTest(name=test_name):
+                source_dir = self.in_same_dir.test_dirs[test_name]
+                self._test_gather_for(
+                    test_name, values["md2txt"]["all_origin"], source_dir, ".md"
+                )
+                target_dir = self.test_dirs[test_name]
+                self._test_gather_for(
+                    test_name, values["md2txt"]["all_destination"], target_dir, ".txt"
+                )
+
 
 
 del AschenputtelTest
