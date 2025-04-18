@@ -141,6 +141,20 @@ class TestInDifferentDir(AschenputtelTest):
                     test_name, values["md2txt"]["all_destination"], target_dir, ".txt"
                 )
 
+    def test_gather_txt2md(self) -> None:
+        source_dir: Path
+        target_dir: Path
+        for test_name, values in self.validation_info.items():
+            with self.subTest(name=test_name):
+                source_dir = self.in_same_dir.test_dirs[test_name]
+                self._test_gather_for(
+                    test_name, values["txt2md"]["all_origin"], source_dir, ".txt"
+                )
+                target_dir = self.test_dirs[test_name]
+                self._test_gather_for(
+                    test_name, values["txt2md"]["all_destination"], target_dir, ".md"
+                )
+
 
 
 del AschenputtelTest
