@@ -1,43 +1,51 @@
 [Test1.md2txt]
 all_origin = ["file1.md", "file2.md"]
 all_destination = ["file1.txt", "file3.txt"]
-to_delete= ["file3.txt"]
+to_delete = ["file3.txt"]
+to_copy = ["file2.md"]
 
 [Test1.txt2md]
 all_origin = ["file1.txt"]
 all_destination = ["file1.md", "file2.md"]
 to_delete = ["file2.md"]
+to_copy = []
 
 
 [Test2.md2txt]
 all_origin = ["file2.md"]
 all_destination = ["file1.txt", "file2.txt", "folder1/file1.txt", "folder1/file2.txt"]
 to_delete = ["folder1/file2.txt", "folder1/file1.txt", "file1.txt"]
+to_copy = []
 
 [Test2.txt2md]
 all_origin = ["file1.txt", "folder1/file2.txt"]
 all_destination = ["file1.md", "file2.md", "folder1/file1.md", "folder1/file2.md", "folder1/file3.md"]
 to_delete = ["file2.md", "folder1/file1.md", "folder1/file3.md"]
+to_copy = []
 
 
 [Test3.txt2md]
 all_origin = ["file1.txt", "folder1/file2.txt"]
 all_destination = ["file1.md", "file2.md", "file4.md", "folder1/file1.md", "folder1/file2.md", "folder1/file3.md", "folder1/folder2/file1.md"]
 to_delete = ["file2.md", "file4.md", "folder1/file1.md", "folder1/file3.md", "folder1/folder2/file1.md"]
+to_copy = []
 
 [Test3.md2txt]
 all_origin = ["folder1/file1.md", "folder1/file2.md"]
 all_destination = ["file1.txt", "folder1/file2.txt", "folder1/folder2/file1.txt", "folder1/folder2/file2.txt", "folder1/folder2/folder3/file1.txt"]
 to_delete = ["file1.txt",  "folder1/folder2/file1.txt", "folder1/folder2/file2.txt", "folder1/folder2/folder3/file1.txt"]
+to_copy = []
 
 
 [Test4.txt2md]
 all_origin = ["file1.txt", "file10.txt", "file2.txt", "file4.txt", "file5.txt", "file7.txt", "file9.txt"]
 all_destination = ["file1.md", "file2.md", "file6.md", "file7.md", "file785.md"]
 to_delete = ["file6.md", "file785.md"]
+to_copy = ["file10.txt", "file4.txt", "file5.txt", "file9.txt"]
 
 [Test4.md2txt]
 all_origin = ["file1.md", "file10.md", "file2.md", "file3.md", "file4.md", "file5.md", "file6.md", "file7.md", "file8.md", "file9.md"]
 all_destination = ["file1.txt", "file12.txt", "file6.txt", "file7.txt"]
 to_delete = ["file12.txt"]
+to_copy = ["file10.md", "file3.md", "file4.md", "file5.md", "file8.md", "file9.md"]
 

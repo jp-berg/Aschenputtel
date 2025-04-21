@@ -15,6 +15,7 @@
 # aschenputtel. If not, see <https://www.gnu.org/licenses/>.
 import argparse
 import os
+import shutil
 from argparse import ArgumentError
 from pathlib import Path
 from typing import NamedTuple, Optional
@@ -204,3 +205,12 @@ if __name__ == "__main__":
             print(f"Deleting {file}...")
         if not args.dry_run:
             os.remove(file)
+
+    to_copy = get_to_copy(
+        args.source, args.source_suffix, args.target, args.target_suffix
+    )
+    for source, destination in to_copy:
+        if args.dry_run or args.verbose:
+            print(f"Copying {source} to {destination}...")
+        if not args.dry_run:
+            shutil.copy2(source, destination)
