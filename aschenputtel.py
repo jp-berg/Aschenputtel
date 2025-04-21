@@ -53,6 +53,12 @@ dry_run_action = parser.add_argument(
     action="store_true",
     help="Just show the files that would have been deleted without actually deleting them",
 )
+verbose_action = parser.add_argument(
+    "-v",
+    "--verbose",
+    action="store_true",
+    help="Shows what the program is currently doing. Is always true if '--dry-run' is set.",
+)
 
 
 class AschenputtelArgs(NamedTuple):
@@ -61,6 +67,7 @@ class AschenputtelArgs(NamedTuple):
     source_suffix: Optional[str] = None
     target_suffix: Optional[str] = None
     dry_run: bool = False
+    verbose: bool = False
 
 
 def extract_args() -> AschenputtelArgs:
@@ -93,7 +100,12 @@ def extract_args() -> AschenputtelArgs:
         target_suffix = None
 
     return AschenputtelArgs(
-        source_dir, target_dir, source_suffix, target_suffix, parsed_args.dry_run
+        source_dir,
+        target_dir,
+        source_suffix,
+        target_suffix,
+        parsed_args.dry_run,
+        parsed_args.verbose,
     )
 
 
@@ -168,6 +180,7 @@ if __name__ == "__main__":
         args.source, args.source_suffix, args.target, args.target_suffix
     )
     for file in to_delete:
-        print(f"Deleting {file}...")
+        if args.dry_run or args.verbose:
+            print(f"Deleting {file}...")
         if not args.dry_run:
             os.remove(file)
