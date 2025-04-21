@@ -25,7 +25,7 @@ parser = argparse.ArgumentParser(
     description="File suffix based syncing",
 )
 
-# TODO --delete --verbose --quiet --version --create-with --move-to --delete-empty-dirs
+# TODO --version --create-with --delete-empty-dirs
 source_action = parser.add_argument(
     "source", nargs=1, help="The directory containing the state to replicate"
 )
