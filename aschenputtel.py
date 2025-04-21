@@ -149,16 +149,21 @@ def gather(p: Path, suffix: Optional[str] = None) -> dict[Path, Path]:
     return relative2absolute
 
 
-def diff_from_target(
-    relative2absolute_source: dict[Path, Path],
-    relative2absolute_target: dict[Path, Path],
+def get_to_delete(
+    source: Path,
+    source_suffix: Optional[str],
+    target: Path,
+    target_suffix: Optional[str],
 ) -> list[Path]:
-    relative_source = relative2absolute_source.keys()
-    relative_target = relative2absolute_target.keys()
+    relative2absolute_s = gather(source, source_suffix)
+    relative2absolute_t = gather(target, target_suffix)
+
+    relative_source = relative2absolute_s.keys()
+    relative_target = relative2absolute_t.keys()
 
     diff_relative = relative_target - relative_source
-    return [relative2absolute_target[relative] for relative in diff_relative]
 
+    return [relative2absolute_t[relative] for relative in diff_relative]
 
 def get_to_delete(
     source: Path,
