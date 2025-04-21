@@ -59,6 +59,13 @@ verbose_action = parser.add_argument(
     action="store_true",
     help="Shows what the program is currently doing. Is always true if '--dry-run' is set.",
 )
+copy_if_not_exist_action = parser.add_argument(
+    "-c",
+    "--copy-if-not-exists",
+    action="store_true",
+    help="If a file has no equivalent with the target-suffix in the right position in the file tree, "
+    "copy the file with the source-suffix to that position.",
+)
 
 
 class AschenputtelArgs(NamedTuple):
@@ -165,16 +172,24 @@ def get_to_delete(
 
     return [relative2absolute_t[relative] for relative in diff_relative]
 
-def get_to_delete(
+
+def get_to_copy(
     source: Path,
     source_suffix: Optional[str],
     target: Path,
     target_suffix: Optional[str],
-) -> list[Path]:
+) -> list[tuple[Path, Path]]:
     relative2absolute_s = gather(source, source_suffix)
     relative2absolute_t = gather(target, target_suffix)
 
-    return diff_from_target(relative2absolute_s, relative2absolute_t)
+    relative_source = relative2absolute_s.keys()
+    relative_target = relative2absolute_t.keys()
+
+    diff_relative = relative_source - relative_target
+    return [
+        (relative2absolute_s[relative], relative2absolute_t[relative])
+        for relative in diff_relative
+    ]
 
 
 if __name__ == "__main__":
