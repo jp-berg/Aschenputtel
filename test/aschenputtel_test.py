@@ -80,22 +80,22 @@ class AschenputtelTest(ABC, unittest.TestCase):
                 f"{test_name}: The following {suffix}-files were not discovered by aschenputtel.gather() but are listed in the validation file: {[f + suffix for f in not_in_test]}"
             )
 
-    def _validate_to_delete(
-        self, test_name: str, to_delete: list[Path], validation: list[Path]
+    def _validate_identified_files(
+        self, test_name: str, identified: list[Path], validation: list[Path]
     ) -> None:
-        to_delete_set = set(to_delete)
-        self.assertEqual(len(to_delete), len(to_delete_set))
+        identified_set = set(identified)
+        self.assertEqual(len(identified), len(identified_set))
 
         validation_set = set(validation)
         self.assertEqual(len(validation), len(validation_set))
 
-        if not_in_validation := to_delete_set - validation_set:
+        if not_in_validation := identified_set - validation_set:
             self.fail(
-                f"{test_name}: The following files were erroneously marked for deletion: {not_in_validation}"
+                f"{test_name}: The following files are not in the validation-set: {not_in_validation}"
             )
-        if not_in_to_delete := validation_set - to_delete_set:
+        if not_identified := validation_set - identified_set:
             self.fail(
-                f"{test_name}: The following files should be deleted but were not marked as such: {not_in_to_delete}"
+                f"{test_name}: The following files are not identified: {not_identified}"
             )
 
 
@@ -122,7 +122,9 @@ class TestInSameDir(AschenputtelTest):
                 to_delete_list = get_to_delete(test_dir, ".txt", test_dir, ".md")
                 validation_list = [test_dir / value for value in values["to_delete"]]
 
-                self._validate_to_delete(test_name, to_delete_list, validation_list)
+                self._validate_identified_files(
+                    test_name, to_delete_list, validation_list
+                )
 
 
 class TestInDifferentDir(AschenputtelTest):
@@ -182,7 +184,9 @@ class TestInDifferentDir(AschenputtelTest):
                     target_dir / value for value in values["md2txt"]["to_delete"]
                 ]
 
-                self._validate_to_delete(test_name, to_delete_list, validation_list)
+                self._validate_identified_files(
+                    test_name, to_delete_list, validation_list
+                )
 
     def test_get_to_delete_txt2md(self) -> None:
         source_dir: Path
@@ -196,7 +200,9 @@ class TestInDifferentDir(AschenputtelTest):
                     target_dir / value for value in values["txt2md"]["to_delete"]
                 ]
 
-                self._validate_to_delete(test_name, to_delete_list, validation_list)
+                self._validate_identified_files(
+                    test_name, to_delete_list, validation_list
+                )
 
 
 del AschenputtelTest
