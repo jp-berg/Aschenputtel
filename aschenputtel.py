@@ -187,10 +187,17 @@ def get_to_copy(
     relative_target = relative2absolute_t.keys()
 
     diff_relative = relative_source - relative_target
-    return [
-        (relative2absolute_s[relative], relative2absolute_t[relative])
+    files_to_copy = [
+        (relative2absolute_s[relative], (target / relative))
         for relative in diff_relative
     ]
+
+    if source_suffix:
+        files_to_copy = [
+            (source_path, target_path.with_suffix(source_suffix))
+            for source_path, target_path in files_to_copy
+        ]
+    return files_to_copy
 
 
 if __name__ == "__main__":
