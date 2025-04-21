@@ -222,5 +222,23 @@ class TestInDifferentDir(AschenputtelTest):
                     test_name, to_copy_list, validation_list
                 )
 
+    def test_get_to_copy_txt2md(self) -> None:
+        source_dir: Path
+        target_dir: Path
+        for test_name, values in self.validation_info.items():
+            with self.subTest(name=test_name):
+                source_dir = self.in_same_dir.test_dirs[test_name]
+                target_dir = self.test_dirs[test_name]
+                to_copy_list = [
+                    to_copy[1]
+                    for to_copy in get_to_copy(source_dir, ".txt", target_dir, ".md")
+                ]
+                validation_list = [
+                    target_dir / value for value in values["txt2md"]["to_copy"]
+                ]
+                self._validate_identified_files(
+                    test_name, to_copy_list, validation_list
+                )
+
 
 del AschenputtelTest
