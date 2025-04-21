@@ -17,6 +17,7 @@ import argparse
 import os
 import shutil
 from argparse import ArgumentError
+from functools import cache
 from pathlib import Path
 from typing import NamedTuple, Optional
 
@@ -135,6 +136,7 @@ def validate_args(args: AschenputtelArgs) -> None:
         )
 
 
+@cache
 def gather(p: Path, suffix: Optional[str] = None) -> dict[Path, Path]:
     all_files = [
         (path, dirnames, filenames) for path, dirnames, filenames in os.walk(p)
