@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import NamedTuple, Optional
 
 parser = argparse.ArgumentParser(
-    prog="Aschenputtel",
-    description="Moves .DNG-Files without matching .JPG files into a separate folder",
+    prog="aschenputtel",
+    description="File suffix based syncing",
 )
 
 # TODO --delete --verbose --quiet --version --create-with --move-to --delete-empty-dirs
