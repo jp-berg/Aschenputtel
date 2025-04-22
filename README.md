@@ -8,3 +8,11 @@
 2. I store the music I buy as '.flac'-files, but use '.opus'-files for playback on my smartphone / ~~mp3~~opus-player / laptop. If I want to delete files in the '.flac'-"world"  I have to manually mirror those changes across all music-library instances. What a pain! But running `aschenputtel --source-file-suffix .flac --target-file-suffix .opus --target $OPUS_DIR $FLAC_DIR` solves this problem for me.
 
 There are probably other programs that do the exact same thing but better, but I like the exercise.
+
+## Developement
+
+`aschenputtel` is tested against Python 3.9, 3.10, 3.11, 3.12 and 3.13 on Linux.
+
+The easiest way to start developement is to set up [uv](https://docs.astral.sh/uv/), install [nox](https://nox.thea.codes/en/stable/) and run `nox` in the folder of the cloned directory. This will set up the dev environment, clean the code and run the tests.
+
+
