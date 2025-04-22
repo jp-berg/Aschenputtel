@@ -23,6 +23,12 @@ PYTHON_VERSION_LIST: Final[list[str]] = ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
 
 @nox.session
+def dev(session: nox.Session) -> None:
+    """Creates the developement environment"""
+    session.run("uv", "sync")
+
+
+@nox.session
 def tidy(session: nox.Session) -> None:
     """Cleans the code"""
     session.install("isort")
@@ -32,7 +38,7 @@ def tidy(session: nox.Session) -> None:
     session.run("black", ".")
 
     session.install("autoflake")
-    session.run("autoflake", "." "-r")
+    session.run("autoflake", ".-r")
     session.notify("check")
 
 
